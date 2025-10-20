@@ -1,0 +1,94 @@
+<div class="wrapper" role="dialog" aria-labelledby="productTitle">
+  <header class="header">
+    <h2 id="productTitle" class="title">{{ (vm$ | async)?.product?.title || 'Detalles del producto' }}</h2>
+    <button mat-icon-button aria-label="Cerrar" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <ng-container *ngIf="vm$ | async as vm">
+    <!-- Loading global -->
+    <div *ngIf="vm.loading" class="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+
+    <!-- Error de producto -->
+    <div *ngIf="vm.productError && !vm.loading" class="error">
+      <p>{{ vm.productError }}</p>
+      <button mat-stroked-button color="primary" (click)="reload()">
+        <mat-icon>refresh</mat-icon>
+        Reintentar
+      </button>
+    </div>
+
+    <!-- Contenido principal -->
+    <div *ngIf="vm.product && !vm.loading" class="content">
+      <!-- Galería -->
+      <section class="gallery">
+        <img class="main-img"
+             [src]="selectedImage || vm.product.images[0] || vm.product.thumbnail"
+             [alt]="vm.product.title"/>
+        <div class="thumbs">
+          <img
+            *ngFor="let img of (vm.product.images.length ? vm.product.images : [vm.product.thumbnail]); trackBy: trackByUrl"
+            [src]="img"
+            [alt]="vm.product.title"
+            [class.active]="img === (selectedImage || vm.product.images[0] || vm.product.thumbnail)"
+            (click)="selectedImage = img"
+          />
+        </div>
+      </section>
+
+      <!-- Info -->
+      <section class="info">
+        <div class="price">{{ vm.product.price | currency:'USD' }}</div>
+        <p class="meta">{{ vm.product.brand }} • {{ vm.product.category }}</p>
+        <p class="rating">
+          <mat-icon aria-hidden="true">star</mat-icon>
+          <span aria-label="Calificación">{{ vm.product.rating }} / 5</span>
+        </p>
+        <p class="desc">{{ vm.product.description }}</p>
+
+        <mat-chip-set>
+          <mat-chip>Stock: {{ vm.product.stock }}</mat-chip>
+          <mat-chip>Desc: {{ vm.product.discountPercentage }}%</mat-chip>
+        </mat-chip-set>
+
+        <div class="actions">
+          <button mat-raised-button color="primary" (click)="notify('Producto agregado a favoritos (demo)')">
+            <mat-icon>favorite</mat-icon>
+            Favorito
+          </button>
+          <button mat-stroked-button (click)="reload()">
+            <mat-icon>refresh</mat-icon>
+            Refrescar
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Reviews -->
+    <section class="reviews" *ngIf="!vm.loading">
+      <h3 class="reviews-title">Reviews</h3>
+
+      <p *ngIf="!vm.reviews?.length" class="empty">No hay reviews para este producto.</p>
+
+      <div class="reviews-list" *ngIf="vm.reviews?.length">
+        <article class="review" *ngFor="let r of vm.reviews; trackBy: trackByReview">
+          <p class="rev-rating">
+            <mat-icon>star</mat-icon>
+            {{ r.rating }} / 5
+          </p>
+          <p class="rev-text">{{ r.comment }}</p>
+          <small class="rev-meta">{{ r.reviewerName || r.user?.username || 'Usuario' }} • {{ r.date | date:'mediumDate' }}</small>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <button mat-button mat-dialog-close>Cerrar</button>
+    </footer>
+  </ng-container>
+</div>
