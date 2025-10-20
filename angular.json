@@ -27,6 +27,7 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.css"
             ],
             "scripts": [],
@@ -62,6 +63,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "disableHostCheck": true,
+            "port": 4200
+          },
           "configurations": {
             "production": {
               "buildTarget": "tech-test-angular:build:production"
@@ -90,6 +95,7 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -97,5 +103,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "9f37e4b8-8e2f-4ea6-8cfd-3808d1f9ea3b"
   }
 }
