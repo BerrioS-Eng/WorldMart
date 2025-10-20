@@ -1,4 +1,4 @@
-import {Product, Review} from '../core/models/product.model';
+import {Product, Review} from '../../models/product.model';
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
@@ -9,7 +9,7 @@ import {MAT_DIALOG_DATA, MatDialogModule, MatDialogRef} from '@angular/material/
 import {CommonModule} from '@angular/common';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
-import {ProductsApi} from '../core/services/product.api';
+import {ProductsApi} from '../../services/product.api';
 import {BehaviorSubject, catchError, map, of, shareReplay, startWith, switchMap} from 'rxjs';
 
 export interface ProductDetailDialogData {

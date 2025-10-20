@@ -1,4 +1,4 @@
-import {Category, Product} from '../core/models/product.model';
+import {Category, Product} from '../models/product.model';
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormControl, ReactiveFormsModule} from '@angular/forms';
@@ -9,8 +9,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatPaginatorModule, PageEvent} from '@angular/material/paginator';
-import {ProductsGridComponent} from './ui/products-grid.component';
-import {ProductsApi} from '../core/services/product.api';
+import {ProductsGridComponent} from '../ui/products-grid.component';
+import {ProductsApi} from '../services/product.api';
 import {
   BehaviorSubject,
   catchError,
@@ -22,11 +22,11 @@ import {
   startWith,
   switchMap
 } from 'rxjs';
-import {ProductDetailDialogComponent} from './product-detail-dialog.component';
+import {ProductDetailDialogComponent} from '../dialogs/product-detail-dialog/product-detail-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {AppStateService} from '../core/state/app-state.service';
-import {AppEventsService} from '../core/state/app-events.service';
+import {AppStateService} from '../../core/state/app-state.service';
+import {AppEventsService} from '../../core/state/app-events.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 
@@ -53,11 +53,11 @@ interface ListVm {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <section style="max-width: 1200px; margin: 24px auto; padding: 0 16px;">
-      <h2 style="margin: 8px 0 12px;">Productos</h2>
+    <section class="products-section">
+      <h2 class="section-title">Productos</h2>
 
-      <div style="display: grid; grid-template-columns: 1fr 220px; gap: 12px; align-items: end;">
-        <mat-form-field appearance="outline">
+      <div class="filters-container">
+        <mat-form-field appearance="outline" class="search-field">
           <mat-label>Buscar</mat-label>
           <input matInput placeholder="Ej: iphone" [formControl]="searchCtrl">
           <button mat-icon-button matSuffix aria-label="Limpiar" *ngIf="(searchCtrl.value ?? '').length" (click)="searchCtrl.setValue('')">
@@ -65,7 +65,7 @@ interface ListVm {
           </button>
         </mat-form-field>
 
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" class="category-field">
           <mat-label>Categorías</mat-label>
           <mat-select [formControl]="categoryCtrl">
             <mat-option [value]="'all'">Todas</mat-option>
@@ -77,11 +77,11 @@ interface ListVm {
       </div>
 
       <ng-container *ngIf="vm$ | async as vm">
-        <div *ngIf="vm.loading" style="display:flex; justify-content:center; padding: 24px;">
+        <div *ngIf="vm.loading" class="loading-container">
           <mat-spinner diameter="40"></mat-spinner>
         </div>
 
-        <p *ngIf="vm.error" style="color: #b00020;">{{ vm.error }}</p>
+        <p *ngIf="vm.error" class="error-message">{{ vm.error }}</p>
 
         <app-products-grid
           *ngIf="!vm.loading"
@@ -102,6 +102,44 @@ interface ListVm {
       </ng-container>
     </section>
   `,
+  styles: [`
+    .products-section {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    .section-title {
+      margin: 8px 0 12px;
+    }
+
+    .filters-container {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .error-message {
+      color: #b00020;
+    }
+
+    @media screen and (max-width: 768px) {
+      .filters-container {
+        grid-template-columns: 1fr;
+      }
+
+      .category-field {
+        width: 100%;
+      }
+    }
+  `]
 })
 
 export class ProductsSectionComponent {

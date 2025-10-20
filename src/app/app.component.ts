@@ -1,7 +1,7 @@
 import {Component, inject} from '@angular/core';
 import {RouterOutlet} from '@angular/router';
 import {MatToolbarModule} from '@angular/material/toolbar';
-import {ProductsSectionComponent} from './products/products-section.component';
+import {ProductsSectionComponent} from './products/components/products-section.component';
 import {AppStateService} from './core/state/app-state.service';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {MatButton} from '@angular/material/button';
@@ -10,7 +10,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {AppEventsService} from './core/state/app-events.service';
-import {ProductNewDialogComponent} from './products/product-new-dialog.component';
+import {ProductNewDialogComponent} from './products/dialogs/product-new-dialog/product-new-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -53,7 +53,6 @@ export class AppComponent {
       if (result === 'created') {
         // notifica a la lista que refresque
         this.events.notifyProductsMutated();
-        // opcional: toast pequeño adicional
         this.snack.open('Lista actualizada', undefined, { duration: 1500 });
       }
     });

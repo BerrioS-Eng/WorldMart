@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, Output, EventEmitter} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Product } from '../../core/models/product.model';
+import { Product } from '../models/product.model';
 import {MatCard, MatCardActions, MatCardContent, MatCardModule} from '@angular/material/card';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';

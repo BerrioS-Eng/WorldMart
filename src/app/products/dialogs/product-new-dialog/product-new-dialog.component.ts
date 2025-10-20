@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
-import {ProductsApi} from '../core/services/product.api';
+import {ProductsApi} from '../../services/product.api';
 import {CommonModule} from '@angular/common';
 import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -10,7 +10,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
 import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {Category, NewProductPayload} from '../core/models/product.model';
+import {Category, NewProductPayload} from '../../models/product.model';
 import {catchError, of, shareReplay} from 'rxjs';
 
 
