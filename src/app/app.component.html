@@ -14,8 +14,8 @@
     --gray-400: oklch(70.9% 0.015 304.04);
 
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
-      "Segoe UI Symbol";
+    Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol";
     box-sizing: border-box;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -50,25 +50,29 @@
     z-index: 1000;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     padding: 0 1rem;
     box-sizing: border-box;
     background-color: #e6f7ff;
   }
 
-  .hero-section{
-    display:grid;
+  .hero-section {
+    display: grid;
     grid-template-columns: 1fr 1.2fr;
-    align-items:center;
+    align-items: center;
     gap: clamp(16px, 4vw, 40px);
     margin-top: 90px;
   }
 
-  .hero-globe{
-    width:100%;
-    max-width:400px;
-    justify-self:end;
+  .hero-globe {
+    width: 100%;
+    max-width: 400px;
+    justify-self: end;
+  }
+
+  .hero-btn-add {
+    margin-top: .5rem;
   }
 
   .hero-text {
@@ -88,23 +92,45 @@
       flex-direction: column;
       width: max-content;
     }
-    .hero-section{ grid-template-columns: 1fr; }
-    .hero-globe{ justify-self:center; max-width: 380px; }
+
+    .hero-section {
+      grid-template-columns: 1fr;
+    }
+
+    .hero-globe {
+      justify-self: center;
+      max-width: 380px;
+    }
   }
 </style>
 
 <main class="main">
   <mat-toolbar color="primary" class="topbar">
-    <img src="logo.png" alt="logo" width="250" height="70" />
+    <img src="logo.png" alt="logo" width="250" height="70"/>
+    <mat-slide-toggle
+      [checked]="isAdmin()"
+      (change)="onToggleAdmin($event.checked)"
+    >
+      Modo Admin
+    </mat-slide-toggle>
   </mat-toolbar>
   <div class="content">
     <section class="hero-section">
-      <div>
+      <div class="hero-text-container">
         <span class="hero-text">¡Explora el grandioso mundo de productos que tenemos para ti!</span>
         <br/>
         <span>Busca y filtra tus productos favoritos.</span>
+        <button *ngIf="isAdmin()"
+                class="hero-btn-add"
+                mat-stroked-button
+                color="warn"
+                matTooltip="Agregar producto"
+                (click)="openNewProductDialog()"
+        >
+          Agregar producto
+        </button>
       </div>
-      <img src="worldmart.png" alt="globe" class="hero-globe" width="200" height="380" />
+      <img src="worldmart.png" alt="globe" class="hero-globe" width="200" height="380"/>
     </section>
     <div>
       <app-products-section></app-products-section>
@@ -122,4 +148,4 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
 
-<router-outlet />
+<router-outlet/>

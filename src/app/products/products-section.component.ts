@@ -25,6 +25,9 @@ import {
 import {ProductDetailDialogComponent} from './product-detail-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {AppStateService} from '../core/state/app-state.service';
+import {AppEventsService} from '../core/state/app-events.service';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 
 interface ListVm {
@@ -83,7 +86,9 @@ interface ListVm {
         <app-products-grid
           *ngIf="!vm.loading"
           [products]="vm.products"
-          (viewDetails)="onViewDetails($event)">
+          [isAdmin]="isAdmin()"
+          (viewDetails)="onViewDetails($event)"
+          (delete)="onDelete($event)">
         </app-products-grid>
 
         <mat-paginator
@@ -122,13 +127,27 @@ export class ProductsSectionComponent {
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
-  private readonly dialog = inject(MatDialog);
+  private readonly appState = inject(AppStateService);
   private readonly snack = inject(MatSnackBar);
+  private readonly dialog = inject(MatDialog);
+  private readonly reload$ = new BehaviorSubject<void>(void 0);
+  private readonly events = inject(AppEventsService);
+
+  readonly isAdmin = this.appState.isAdmin;
+
+  constructor() {
+    this.events.productMutate$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.reload$.next();
+      })
+  }
 
   readonly vm$ = combineLatest([
     this.search$,
     this.category$,
     this.pageIndex$,
+    this.reload$,
   ]).pipe(
     switchMap(([q, category, pageIndex]) => {
       const skip = pageIndex * this.pageSize;
@@ -168,7 +187,7 @@ export class ProductsSectionComponent {
         catchError(() => of(<ListVm>{ products: [], total: 0, loading: false, error: 'No se pudo cargar productos.' }))
       );
     }),
-    startWith(<ListVm>{ products: [], total: 0, loading: true }),
+    startWith({ products: [], total: 0, loading: true } as ListVm),
     shareReplay({ bufferSize: 1, refCount: true })
   );
 
@@ -195,6 +214,23 @@ export class ProductsSectionComponent {
     });
 
     console.log(product);
+  }
+
+  onDelete(prod: Product): void {
+    // confirmación simple del navegador; puedes reemplazar por MatDialog custom
+    const ok = confirm(`¿Eliminar "${prod.title}"?`);
+    if (!ok) return;
+    this.api.deleteProduct(prod.id).subscribe({
+      next: (resp) => {
+        console.log('Delete response:', resp);
+        this.snack.open('Producto eliminado', 'Cerrar', { duration: 2500 });
+        // refresca vista
+        this.reload$.next();
+      },
+      error: () => {
+        this.snack.open('No se pudo eliminar el producto', 'Cerrar', { duration: 3000 });
+      }
+    });
   }
 
 }

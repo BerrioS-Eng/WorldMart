@@ -4,6 +4,7 @@ import { Product } from '../../core/models/product.model';
 import {MatCard, MatCardActions, MatCardContent, MatCardModule} from '@angular/material/card';
 import {MatIcon, MatIconModule} from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 
 
@@ -17,7 +18,8 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     MatCardModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTooltipModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -33,7 +35,10 @@ import { MatButtonModule } from '@angular/material/button';
             {{ p.rating }} / 5
           </p>
         </mat-card-content>
-        <mat-card-actions align="end">
+        <mat-card-actions align="end" class="card-footer">
+          <button *ngIf="isAdmin" mat-stroked-button color="warn" (click)="delete.emit(p)" matTooltip="Eliminar producto">
+            Eliminar
+          </button>
           <button mat-stroked-button color="primary" (click)="viewDetails.emit(p)">Ver detalles</button>
         </mat-card-actions>
       </mat-card>
@@ -43,11 +48,14 @@ import { MatButtonModule } from '@angular/material/button';
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin: 16px 0; }
     .card { display: flex; flex-direction: column; }
     img { object-fit: cover; height: 180px; margin: auto}
+    .card-footer { display: flex; justify-content: space-between; align-items: center; }
   `]
 })
 export class ProductsGridComponent {
   @Input({ required: true }) products: Product[] = [];
+  @Input() isAdmin = false;
   @Output() viewDetails = new EventEmitter<Product>();
+  @Output() delete = new EventEmitter<Product>();
 
   trackById = (_: number, item: Product) => item.id;
 

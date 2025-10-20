@@ -40,3 +40,10 @@ export interface Review {
   user?: ReviewUser;
 }
 
+export interface NewProductPayload {
+  title: string;
+  price: number;
+  brand: string;
+  category: string;
+  description: string;
+}

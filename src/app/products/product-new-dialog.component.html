@@ -1,0 +1,53 @@
+<div class="wrapper">
+  <h2 style="margin:0 0 8px 0;">Nuevo producto</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+    <mat-form-field appearance="outline">
+      <mat-label>Título</mat-label>
+      <input matInput formControlName="title" required />
+      <mat-error *ngIf="form.controls.title.invalid && form.controls.title.touched">Requerido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Precio</mat-label>
+      <input matInput type="number" formControlName="price" required />
+      <mat-error *ngIf="form.controls.price.invalid && form.controls.price.touched">Requerido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Marca</mat-label>
+      <input matInput formControlName="brand" required />
+      <mat-error *ngIf="form.controls.brand.invalid && form.controls.brand.touched">Requerido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Categoría</mat-label>
+      <mat-select formControlName="category" required>
+        <mat-option *ngFor="let c of (categories$ | async)" [value]="c.slug">
+          {{ c.name }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="form.controls.category.invalid && form.controls.category.touched">Requerido</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="desc">
+      <mat-label>Descripción</mat-label>
+      <textarea matInput formControlName="description" rows="4" required></textarea>
+      <mat-error *ngIf="form.controls.description.invalid && form.controls.description.touched">Requerido</mat-error>
+    </mat-form-field>
+
+    <div class="actions">
+      <button mat-stroked-button type="button" (click)="close()">Cancelar</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || submitting">
+        <ng-container *ngIf="!submitting; else loadingTpl">Crear</ng-container>
+      </button>
+    </div>
+  </form>
+
+  <ng-template #loadingTpl>
+        <span style="display:flex; align-items:center; gap:6px;">
+          <mat-spinner diameter="18"></mat-spinner>
+          Guardando...
+        </span>
+  </ng-template>
+</div>

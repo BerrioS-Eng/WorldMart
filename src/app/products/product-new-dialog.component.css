@@ -1,0 +1,26 @@
+.wrapper {
+  width: 40vw;
+  max-width: 520px;
+  padding: 8px;
+  margin: 0 auto;
+}
+
+.form {
+  display: grid;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.desc textarea {
+  resize: vertical;
+}
+
+@media (max-width: 900px) {
+  .wrapper {
+    width: 92vw;
+  }
+}

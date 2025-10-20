@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {Category, Product, ProductsResponse} from '../models/product.model';
+import {Category, NewProductPayload, Product, ProductsResponse} from '../models/product.model';
 
 
 const BASE_URL = "https://dummyjson.com";
@@ -47,6 +47,14 @@ export class ProductsApi {
 
   getProductById(id: number): Observable<Product> {
     return this.http.get<Product>(`${BASE_URL}/products/${id}`);
+  }
+
+  addProduct(body: NewProductPayload): Observable<Product> {
+    return this.http.post<Product>(`${BASE_URL}/products/add`, body);
+  }
+
+  deleteProduct(id: number): Observable<unknown> {
+    return this.http.delete(`${BASE_URL}/products/${id}`);
   }
 
 }
